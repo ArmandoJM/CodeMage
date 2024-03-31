@@ -1,0 +1,35 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMage - Generate Code Snippets</title>
+</head>
+<body>
+    <h1>Welcome to CodeMage</h1>
+    <form action="/" method="post">
+        <label for="problem_description">Describe your coding problem:</label><br>
+        <textarea id="problem_description" name="problem_description" rows="4" cols="50"></textarea><br>
+        <input type="submit" value="Generate Code">
+    </form>
+
+    {% if submitted %}
+        <h2>Generated Code for:</h2>
+        <p>{{ problem_description }}</p>
+        <pre><code>{{ generated_code }}</code></pre> <!-- Display the generated code snippet -->
+        
+        <!-- Feedback Form -->
+        <h2>Feedback on Generated Code</h2>
+        <form action="/submit_feedback" method="post">
+            <input type="hidden" name="problem_description" value="{{ problem_description }}">
+            <input type="hidden" name="generated_code" value="{{ generated_code }}">
+	        <label>
+		        <textarea name="feedback" rows="4" cols="50" placeholder="Enter your feedback here..."></textarea>
+	        </label><br>
+            <input type="submit" value="Submit Feedback">
+        </form>
+    {% endif %}
+</body>
+</html>
