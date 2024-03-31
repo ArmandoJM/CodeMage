@@ -3,6 +3,7 @@
 import json
 from datetime import datetime
 
+
 def save_feedback(data):
     """
     Saves feedback data to a JSON file.
@@ -13,8 +14,8 @@ def save_feedback(data):
         # Read existing feedback data
         with open(filename, 'r') as file:
             feedback_list = json.load(file)
-    except FileNotFoundError:
-        # If the file does not exist, start with an empty list
+    except (FileNotFoundError, json.JSONDecodeError):
+        # If the file does not exist or JSON is invalid, start with an empty list
         feedback_list = []
 
     # Add timestamp to the feedback data
@@ -23,9 +24,13 @@ def save_feedback(data):
     # Append the new feedback data
     feedback_list.append(data)
 
-    # Write updated feedback data back to the file
-    with open(filename, 'w') as file:
-        json.dump(feedback_list, file, indent=4)
+    try:
+        # Write updated feedback data back to the file
+        with open(filename, 'w') as file:
+            json.dump(feedback_list, file, indent=4)
+    except IOError as e:
+        print(f"An error occurred while writing to the file: {e}")
+
 
 def get_feedback():
     """
@@ -36,6 +41,6 @@ def get_feedback():
         with open(filename, 'r') as file:
             feedback_list = json.load(file)
         return feedback_list
-    except FileNotFoundError:
-        # If the file does not exist, return an empty list
+    except (FileNotFoundError, json.JSONDecodeError):
+        # If the file does not exist or JSON is invalid, return an empty list
         return []
