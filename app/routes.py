@@ -1,6 +1,9 @@
 # app/routes.py
+import json
+import re
 from app import app  # Import the existing app instance
-from flask import request, render_template, redirect, url_for, jsonify
+from flask import request, render_template, redirect, url_for
+from markupsafe import escape
 from model.llm_handler import get_code_from_llm
 from feedback.feedback import save_feedback  # import the feedback functions
 # Import the snippets_manager functions at the top
@@ -33,18 +36,21 @@ def submit_feedback():
     }
     save_feedback(feedback_data)
 
-    # After saving feedback, you might want to redirect to a thank you page or back to the index
-    return render_template('index.html')  # or redirect(url_for('index'))
+    return redirect(url_for('show_generated_code'))
 
 
-@app.route('/snippets')
+@app.route('/snippets', methods=['GET'])
 def snippets():
-    return render_template('snippets.html', snippets=get_snippets())
+    snippets = get_snippets()
+    return render_template('snippets.html', snippets=snippets)
 
 
 @app.route('/generate_code', methods=['POST'])
 def generate_code():
-    problem_description = request.form['problem_description']
+    problem_description = escape(request.form['problem_description'])
+    # Validate input format (optional)
+    if not re.match(r'^[a-zA-Z0-9\s]+$', problem_description):
+        return 'Invalid input format'
     generated_code = get_code_from_llm(problem_description)
 
     # Instead of returning JSON, render the index template with the generated code.
@@ -52,9 +58,22 @@ def generate_code():
                            problem_description=problem_description, generated_code=generated_code)
 
 
+def execute_safe_code_generation(problem_description):
+    # Execute code generation in a safe environment
+    # Example: using ast.literal_eval() for safe evaluation
+    return "Generated code for: " + problem_description
+
+
 def is_code_quality_acceptable(code):
     # Placeholder for actual quality check logic
     return len(code) > 20 and "function" in code
+
+
+@app.route('/snippets')
+def list_snippets():
+    """List all snippets."""
+    snippets = get_snippets()
+    return render_template('snippets.html', snippets=snippets)
 
 
 # Add a new route to handle saving the snippet after the user has reviewed it
@@ -64,14 +83,40 @@ def save_snippet_route():
     problem_description = request.form['problem_description']
     generated_code = request.form['generated_code']
 
-    # Save the snippet
+    # Save the snippet using the snippets_manager function
     save_snippet(problem_description, generated_code)
 
-    # Redirect to the snippets page or wherever you'd like after saving
+    # Redirect the user to the snippet list
     return redirect(url_for('snippets'))
 
 
-@app.route('/delete_snippet/<int:snippet_id>')
+@app.route('/delete_snippet/<snippet_id>', methods=['POST', 'DELETE'])
 def delete_snippet_route(snippet_id):
-    delete_snippet(snippet_id)
+    # Convert snippet_id to the appropriate data type if needed
+    # To Perform the deletion logic here
     return redirect(url_for('snippets'))
+
+
+@app.route('/show_generated_code')
+def show_generated_code():
+    # Get the last feedback entry from feedback.json (or wherever feedback is stored)
+    try:
+        with open('feedback.json', 'r') as file:
+            feedbacks = json.load(file)
+        last_feedback = feedbacks[-1]  # Assuming the newest feedback is at the end of the list
+    except (FileNotFoundError, IndexError):  # Handle if the file is missing or empty
+        last_feedback = {'problem_description': '', 'generated_code': '', 'feedback': ''}
+
+    # Pass the data to the template
+    return render_template(
+        'show_generated_code.html',
+        problem_description=last_feedback['problem_description'],
+        generated_code=last_feedback['generated_code'],
+        feedback=last_feedback['feedback']
+    )
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,13 +1,12 @@
 # snippets_manager.py
-
 import json
+import uuid
 from datetime import datetime
 
 SNIPPETS_FILE = 'snippets.json'
 
 
 def save_snippet(problem_description, generated_code):
-    """Save a new code snippet."""
     try:
         with open(SNIPPETS_FILE, 'r') as file:
             snippets = json.load(file)
@@ -15,7 +14,7 @@ def save_snippet(problem_description, generated_code):
         snippets = []
 
     snippets.append({
-        'id': len(snippets) + 1,
+        'id': str(uuid.uuid4()),
         'problem_description': problem_description,
         'generated_code': generated_code,
         'timestamp': datetime.now().isoformat()
@@ -26,7 +25,6 @@ def save_snippet(problem_description, generated_code):
 
 
 def get_snippets():
-    """Retrieve all code snippets."""
     try:
         with open(SNIPPETS_FILE, 'r') as file:
             return json.load(file)

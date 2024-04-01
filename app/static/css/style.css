@@ -1,0 +1,53 @@
+/* static/styles.css */
+
+body {
+    background-color: #36393f; /* Discord dark theme background color */
+    color: #ffffff; /* Text color */
+    font-family: Arial, sans-serif; /* Specify your preferred font */
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.header {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.form-container {
+    background-color: #2f3136; /* Form background color */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #40444b; /* Textarea background color */
+    color: #ffffff; /* Text color */
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #7289da; /* Discord blue color */
+    color: #ffffff; /* Text color */
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #677bc4; /* Darker shade of Discord blue on hover */
+}
+
+.snippet-list {
+    /* Styles for the snippet list */
+    list-style: none;
+    padding: 0;
+    /* Add more styles as needed */
+}

@@ -1,24 +1,32 @@
 <!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeMage - Generate Code Snippets</title>
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
-    <h1>Welcome to CodeMage</h1>
-    <form action="/" method="post">
-        <label for="problem_description">Describe your coding problem:</label><br>
-        <textarea id="problem_description" name="problem_description" rows="4" cols="50"></textarea><br>
-        <input type="submit" value="Generate Code">
-    </form>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to CodeMage</h1>
+        </div>
+        <div class="form-container">
+            <form action="/" method="post">
+                <label for="problem_description">Describe your coding problem:</label><br>
+                <textarea id="problem_description" name="problem_description" rows="4" cols="50"></textarea><br>
+                <button type="submit">Generate Code</button>
+            </form>
+        </div>
 
     {% if submitted %}
-        <h2>Generated Code for:</h2>
-        <p>{{ problem_description }}</p>
-        <pre><code>{{ generated_code }}</code></pre> <!-- Display the generated code snippet -->
+        <!-- Display the generated code -->
+            <div class="generated-code">
+                <h2>Generated Code for:</h2>
+                <p>{{ problem_description }}</p>
+                <pre><code>{{ generated_code }}</code></pre>
+            </div>
         
         <!-- Feedback Form -->
         <h2>Feedback on Generated Code</h2>
@@ -31,5 +39,6 @@
             <input type="submit" value="Submit Feedback">
         </form>
     {% endif %}
+    </div>
 </body>
 </html>

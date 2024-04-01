@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
+    <meta charset="UTF-8">
+    <title>CodeMage - Snippets Management</title>
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
-    <h1>Generated Snippets</h1>
-    <ul>
-	    {% if snippets %}
-	        {% for snippet in snippets %}
-	    <li>
-            <p>{{ snippet.problem_description }}: {{ snippet.generated_code }}</p>
-            <a href="{{ url_for('delete_snippet_route', snippet_id=snippet.id) }}">Delete</a>
-        </li>
-	    {% endfor %}
-    {% else %}
-        <p>No snippets found.</p>
-    {% endif %}
+    <h1 class="page-title">Code Snippets Management</h1>
+
+    <h2 class="section-title">Generated Snippets</h2>
+    <ul class="snippet-list">
+        {% for snippet in snippets %}
+            <li class="snippet-item">
+                <strong class="snippet-description-label">Description:</strong>
+                <span class="snippet-description">{{ snippet.problem_description }}</span><br>
+                <strong class="snippet-code-label">Code:</strong>
+                <pre class="snippet-code">{{ snippet.generated_code }}</pre>
+				<form action="{{ url_for('delete_snippet_route', snippet_id=snippet.id) }}" method="post" class="delete-form">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" value="Delete" class="delete-button">
+                </form>
+            </li>
+        {% endfor %}
     </ul>
+
+    <a href="{{ url_for('index') }}" class="go-back-link">Go back</a>
 </body>
 </html>
