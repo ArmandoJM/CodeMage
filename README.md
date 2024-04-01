@@ -34,6 +34,25 @@ To generate a code snippet:
 - Click the "Generate Code" button to receive a code snippet.
 - (Optional) Submit feedback for the generated code to help improve future responses.
 
+
+## Running with Docker
+
+To simplify deployment, you can use Docker to run CodeMage.
+
+### Building the Docker Image
+
+Navigate to the root directory of the project where the `Dockerfile` is located and run the following command to build the Docker image:
+
+```bash
+docker build -t codemage .
+```
+
+## Running the Docker Container
+After the image has been successfully built, you can run your application in a Docker container using:
+```bash
+docker run -p 5000:5000 codemage
+```
+
 ## Performance Notes
 
 - The application runs on CPU; generation times may vary based on the complexity of the prompt.
