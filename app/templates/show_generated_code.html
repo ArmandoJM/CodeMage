@@ -1,0 +1,24 @@
+<!-- templates/show_generated_code.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Generated Code</title>
+</head>
+<body>
+    <h1>Review Generated Code</h1>
+    <p>Problem Description: {{ problem_description }}</p>
+    <pre>{{ generated_code }}</pre>
+
+    <!-- Form to save the snippet -->
+    <form action="{{ url_for('save_snippet_route') }}" method="post">
+        <input type="hidden" name="problem_description" value="{{ problem_description }}">
+        <input type="hidden" name="generated_code" value="{{ generated_code }}">
+        <input type="submit" value="Save This Snippet">
+    </form>
+
+    <!-- Link back to the main page -->
+    <a href="{{ url_for('index') }}">Go back</a>
+</body>
+</html>
